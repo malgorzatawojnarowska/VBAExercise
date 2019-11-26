@@ -1,0 +1,68 @@
+Attribute VB_Name = "Exercise_1"
+Sub countErrors()
+
+Dim errors As Integer, numberOfRows As Integer
+
+errors = 0
+numberOfRows = Sheets("Data").UsedRange.rows.Count
+
+For i = 2 To numberOfRows
+
+    If Sheets("Data").Cells(i, 2).Value = 1 Then
+            errors = errors + 1
+    End If
+
+Next i
+
+Sheets("Exercices").Cells(4, 5).Value = errors
+Sheets("Exercices").Cells(4, 6).Value = errors - Sheets("Exercices").Cells(4, 4).Value
+
+If Sheets("Exercices").Cells(4, 5).Value < 0 Then
+    Sheets("Exercices").Cells(4, 6).Interior.Color = RGB(255, 0, 0)
+Else: Sheets("Exercices").Cells(4, 6).Interior.Color = RGB(0, 255, 0)
+End If
+
+
+End Sub
+
+Sub findOS()
+
+On Error Resume Next
+
+wrs = Sheets("Data").Columns(1).Find(what:=Sheets("Exercices").range("D9"), lookat:=xlWhole).Row
+Sheets("Exercices").Cells(9, 5).Value = Sheets("Data").Cells(wrs, 3).Value
+
+If Err <> 0 Then
+   Sheets("Exercices").Cells(9, 5).Value = "Nothing found"
+End If
+
+End Sub
+
+Sub percent()
+
+Dim errors As Integer, numberOfRows As Integer, numberOfLinux As Integer, numberOfWindows As Integer
+
+errors = 0
+numberOfLinux = 0
+numberOfWindows = 0
+numberOfRows = Sheets("Data").UsedRange.rows.Count
+
+For i = 2 To numberOfRows
+
+    If Sheets("Data").Cells(i, 2).Value = 1 Then
+            errors = errors + 1
+            If Sheets("Data").Cells(i, 3).Value = "Linux" Then
+                numberOfLinux = numberOfLinux + 1
+            ElseIf Sheets("Data").Cells(i, 3).Value = "Windows" Then
+                numberOfWindows = numberOfWindows + 1
+            End If
+    End If
+    
+Next i
+
+Sheets("Exercices").range("H4").Value = 100 * numberOfWindows / errors
+Sheets("Exercices").range("I4").Value = 100 * numberOfLinux / errors
+
+
+End Sub
+
